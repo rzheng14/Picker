@@ -10,18 +10,23 @@
 import PackageDescription
 
 let package = Package(
-    name: "Picker",
-    platforms: [
-        .macOS(.v10_15),
-    ],
+    name: "name",
     products: [
-        .library(name: "MyLibrary", targets: ["MyLibrary"]),
+        .library(name: "App", targets: ["App"]),
+        .executable(name: "Run", targets: ["Run"])
     ],
     dependencies: [
-        .package(url: "https://url/of/another/package/named/Utility", from: "1.0.0"),
+        .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "2.1.0")),
+        .package(url: "https://github.com/vapor/fluent-provider.git", .upToNextMajor(from: "1.2.0")),
     ],
     targets: [
-        .target(name: "MyLibrary", dependencies: ["Utility"]),
-        .testTarget(name: "MyLibraryTests", dependencies: ["MyLibrary"]),
+        .target(name: "App", dependencies: ["Vapor", "FluentProvider"],
+                exclude: [
+                    "Config",
+                    "Public",
+                    "Resources",
+                ]),
+        .target(name: "Run", dependencies: ["App"]),
+        .testTarget(name: "AppTests", dependencies: ["App", "Testing"])
     ]
 )

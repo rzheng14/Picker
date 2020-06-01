@@ -1,1 +1,1 @@
-web: Picker
+web: ./Picker
