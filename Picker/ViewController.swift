@@ -15,6 +15,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
   @IBOutlet weak var choice3: UITextField!
   @IBOutlet weak var choice4: UITextField!
   @IBOutlet weak var choice5: UITextField!
+  @IBOutlet weak var choice6: UITextField!
+  @IBOutlet weak var choice7: UITextField!
+  @IBOutlet weak var choice8: UITextField!
+  @IBOutlet weak var choice9: UITextField!
+  @IBOutlet weak var choice10: UITextField!
   @IBOutlet weak var pickButton: UIButton!
   @IBOutlet weak var chosen: UILabel!
   @IBOutlet weak var clear: UIButton!
@@ -35,33 +40,42 @@ class ViewController: UIViewController, UITextFieldDelegate {
     view.addGestureRecognizer(tap)
     
     
-    let tFArray: [UITextField] = [choice1, choice2, choice3, choice4]
+    let tFArray: [UITextField] = [choice1, choice2, choice3, choice4, choice5, choice6, choice7, choice8, choice9, choice10]
     
     for textField in tFArray {
       textField.delegate = self
-      textField.modifyClearButton()
+      textField.modifyClearButton() //this makes the clear (x) cooler looking
     }
     
+    //pickButton.frame = CGRect(x: 150, y: 640, width: 90, height: 90)
     
-    pickButton.frame = CGRect(x: pickButton.frame.origin.x, y: pickButton.frame.origin.y, width: 90, height: 90)
+    
     pickButton.layer.cornerRadius = 0.5 * pickButton.bounds.size.width
     
+   
     
     yesno.frame.origin.y = choice3.frame.origin.y
     add.frame.origin.y = choice3.frame.origin.y
     
     clear.frame.origin.y = 245
-    
-     NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+
+    NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
        
-       NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    
+  }
+  
+  func viewDidAppear() {
+    pickButton.frame.origin = CGPoint(x: pickButton.frame.origin.x, y: 640)
+    //for some reason this needs to be here even tho everything else is fine wherever they were
+    //
   }
   
   
   @objc func keyboardWillShow(notification: NSNotification) {
     guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
     else {
-      // if keyboard size is not available for some reason, dont do anything
+      // if keyboard size is not available for whatever reason, do nothing
       return
     }
 
@@ -84,6 +98,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
      return true
   }
   
+  func hideChoice() {
+    let choicesArray: [UITextField] = [choice1, choice2, choice3, choice4, choice5, choice6, choice7, choice8, choice9, choice10]
+    
+    for choices in choicesArray {
+      if choices.isHidden {
+        choices.text = ""
+      }
+    }
+  }
+  
   
   @IBAction func stepping(_ sender: UIStepper) {
     let stepValue = sender.value
@@ -91,26 +115,60 @@ class ViewController: UIViewController, UITextFieldDelegate {
     if stepValue == 3 {
       choice3.isHidden = false
       choice4.isHidden = true
-      choice5.isHidden = true
-      choice4.text = ""
-      choice5.text = ""
+      hideChoice()
       yesno.frame.origin.y = choice4.frame.origin.y
       add.frame.origin.y = choice4.frame.origin.y
     } else if stepValue == 4 {
       choice4.isHidden = false
       choice5.isHidden = true
-      choice5.text = ""
+      hideChoice()
       yesno.frame.origin.y = choice5.frame.origin.y
       add.frame.origin.y = choice5.frame.origin.y
     } else if stepValue == 5 {
       choice5.isHidden = false
-      yesno.frame.origin.y = choice5.frame.origin.y + 60
-      add.frame.origin.y = choice5.frame.origin.y + 60
+      choice6.isHidden = true
+      hideChoice()
+      yesno.frame.origin.y = choice6.frame.origin.y
+      add.frame.origin.y = choice6.frame.origin.y
+      pickButton.frame.origin.y = 640
+    } else if stepValue == 6 {
+      choice6.isHidden = false
+      choice7.isHidden = true
+      hideChoice()
+      yesno.frame.origin.y = choice7.frame.origin.y
+      add.frame.origin.y = choice7.frame.origin.y
+      pickButton.frame.origin.y = 700
+    } else if stepValue == 7 {
+      choice7.isHidden = false
+      choice8.isHidden = true
+      hideChoice()
+      yesno.frame.origin.y = choice8.frame.origin.y
+      add.frame.origin.y = choice8.frame.origin.y
+      pickButton.frame.origin.y = 760
+    } else if stepValue == 8 {
+      choice8.isHidden = false
+      choice9.isHidden = true
+      hideChoice()
+      yesno.frame.origin.y = choice9.frame.origin.y
+      add.frame.origin.y = choice9.frame.origin.y
+      pickButton.frame.origin.y = 820
+    } else if stepValue == 9 {
+      choice9.isHidden = false
+      choice10.isHidden = true //need to include this when decreasing so the options are deleted
+      hideChoice()
+      yesno.frame.origin.y = choice10.frame.origin.y
+      add.frame.origin.y = choice10.frame.origin.y
+      pickButton.frame.origin.y = 880
+    } else if stepValue == 10 {
+      choice10.isHidden = false
+      hideChoice()
+      yesno.frame.origin.y = choice10.frame.origin.y + 60
+      add.frame.origin.y = choice10.frame.origin.y + 60
+      pickButton.frame.origin.y = 920
     } else {
       reset()
     }
   }
-  
   
   
   func reset() {
@@ -118,14 +176,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
     choice3.isHidden = true
     choice4.isHidden = true
     choice5.isHidden = true
-    choice3.text = ""
-    choice4.text = ""
-    choice5.text = ""
+    choice6.isHidden = true
+    choice7.isHidden = true
+    choice8.isHidden = true
+    choice9.isHidden = true
+    choice10.isHidden = true
+    hideChoice()
     yesno.frame.origin.y = choice3.frame.origin.y
     add.frame.origin.y = choice3.frame.origin.y
-
+    pickButton.frame.origin.y = 640
   }
-  
   
   
   @IBAction func picking(_ sender: Any) {
@@ -147,9 +207,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
     if choice5.text != "" {
       choices.append(choice5.text!)
     }
+    if choice6.text != "" {
+      choices.append(choice6.text!)
+    }
+    if choice7.text != "" {
+      choices.append(choice7.text!)
+    }
+    if choice8.text != "" {
+      choices.append(choice8.text!)
+    }
+    if choice9.text != "" {
+      choices.append(choice9.text!)
+    }
+    if choice10.text != "" {
+      choices.append(choice10.text!)
+    }
     
     
     let rand = choices.randomElement()
+    
     
     if choices.count == 0 {
       UIView.transition(with: chosen,
@@ -167,10 +243,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
       }, completion: nil)
     }
     
-    
-
+    scrollView.setContentOffset(CGPoint(x: scrollView.frame.origin.x, y: 0), animated: true) //yeets screen to top
   }
   
+
   @IBAction func clearAll(_ sender: Any) {
     choice1.text = ""
     choice2.text = ""
@@ -193,6 +269,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
        animations: { [weak self] in
            self?.chosen.text = yayNay
     }, completion: nil)
+    
+    scrollView.setContentOffset(CGPoint(x: scrollView.frame.origin.x, y: 0), animated: true)
   }
   
 }
