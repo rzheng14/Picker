@@ -49,15 +49,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     //pickButton.frame = CGRect(x: 150, y: 640, width: 90, height: 90)
     
-    
     pickButton.layer.cornerRadius = 0.5 * pickButton.bounds.size.width
-    
-   
     
     yesno.frame.origin.y = choice3.frame.origin.y
     add.frame.origin.y = choice3.frame.origin.y
     
-    clear.frame.origin.y = 245
+    clear.frame.origin.y = 245 //slightly above option 1
 
     NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
        
@@ -99,6 +96,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
   }
   
   func hideChoice() {
+    //if the textfields are not visible then they should not provide options.
     let choicesArray: [UITextField] = [choice1, choice2, choice3, choice4, choice5, choice6, choice7, choice8, choice9, choice10]
     
     for choices in choicesArray {
@@ -110,64 +108,58 @@ class ViewController: UIViewController, UITextFieldDelegate {
   
   
   @IBAction func stepping(_ sender: UIStepper) {
-    let stepValue = sender.value
-    
-    if stepValue == 3 {
+    //there are some magic numbers, need to think of a way to increment/decrement upon increment/decrement of textfields
+    switch sender.value {
+    case 3:
       choice3.isHidden = false
       choice4.isHidden = true
-      hideChoice()
       yesno.frame.origin.y = choice4.frame.origin.y
       add.frame.origin.y = choice4.frame.origin.y
-    } else if stepValue == 4 {
+    case 4:
       choice4.isHidden = false
       choice5.isHidden = true
-      hideChoice()
       yesno.frame.origin.y = choice5.frame.origin.y
       add.frame.origin.y = choice5.frame.origin.y
-    } else if stepValue == 5 {
+    case 5:
       choice5.isHidden = false
       choice6.isHidden = true
-      hideChoice()
       yesno.frame.origin.y = choice6.frame.origin.y
       add.frame.origin.y = choice6.frame.origin.y
       pickButton.frame.origin.y = 640
-    } else if stepValue == 6 {
+    case 6:
       choice6.isHidden = false
       choice7.isHidden = true
-      hideChoice()
       yesno.frame.origin.y = choice7.frame.origin.y
       add.frame.origin.y = choice7.frame.origin.y
       pickButton.frame.origin.y = 700
-    } else if stepValue == 7 {
+    case 7:
       choice7.isHidden = false
       choice8.isHidden = true
-      hideChoice()
       yesno.frame.origin.y = choice8.frame.origin.y
       add.frame.origin.y = choice8.frame.origin.y
       pickButton.frame.origin.y = 760
-    } else if stepValue == 8 {
+    case 8:
       choice8.isHidden = false
       choice9.isHidden = true
-      hideChoice()
       yesno.frame.origin.y = choice9.frame.origin.y
       add.frame.origin.y = choice9.frame.origin.y
       pickButton.frame.origin.y = 820
-    } else if stepValue == 9 {
+    case 9:
       choice9.isHidden = false
-      choice10.isHidden = true //need to include this when decreasing so the options are deleted
-      hideChoice()
+      choice10.isHidden = true
       yesno.frame.origin.y = choice10.frame.origin.y
       add.frame.origin.y = choice10.frame.origin.y
       pickButton.frame.origin.y = 880
-    } else if stepValue == 10 {
+    case 10:
+      //60 is the difference
       choice10.isHidden = false
-      hideChoice()
-      yesno.frame.origin.y = choice10.frame.origin.y + 60
-      add.frame.origin.y = choice10.frame.origin.y + 60
-      pickButton.frame.origin.y = 920
-    } else {
+      yesno.frame.origin.y += 60
+      add.frame.origin.y += 60
+      pickButton.frame.origin.y += 60
+    default:
       reset()
     }
+    hideChoice()
   }
   
   
@@ -191,41 +183,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
   @IBAction func picking(_ sender: Any) {
     var choices: [String] = []
     
-    //if entry options aren't empty, add them to my array
-    if choice1.text != "" {
-      choices.append(choice1.text!)
-    }
-    if choice2.text != "" {
-      choices.append(choice2.text!)
-    }
-    if choice3.text != "" {
-      choices.append(choice3.text!)
-    }
-    if choice4.text != "" {
-      choices.append(choice4.text!)
-    }
-    if choice5.text != "" {
-      choices.append(choice5.text!)
-    }
-    if choice6.text != "" {
-      choices.append(choice6.text!)
-    }
-    if choice7.text != "" {
-      choices.append(choice7.text!)
-    }
-    if choice8.text != "" {
-      choices.append(choice8.text!)
-    }
-    if choice9.text != "" {
-      choices.append(choice9.text!)
-    }
-    if choice10.text != "" {
-      choices.append(choice10.text!)
-    }
+    let choicesArray: [UITextField] = [choice1, choice2, choice3, choice4, choice5, choice6, choice7, choice8, choice9, choice10]
+    //unsure if this is good practice to declare this multiple times
     
-    
+    for i in choicesArray {
+      if (i.text != "") {
+        choices.append(i.text!)
+      }
+    }
+ 
     let rand = choices.randomElement()
-    
     
     if choices.count == 0 {
       UIView.transition(with: chosen,
