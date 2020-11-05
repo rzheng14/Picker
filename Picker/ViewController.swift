@@ -49,6 +49,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     //pickButton.frame = CGRect(x: 150, y: 640, width: 90, height: 90)
     
+    //makes the pickbutton a circle
     pickButton.layer.cornerRadius = 0.5 * pickButton.bounds.size.width
     
     yesno.frame.origin.y = choice3.frame.origin.y
@@ -56,6 +57,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     clear.frame.origin.y = 245 //slightly above option 1
 
+    //keyboard show/hide
     NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
        
     NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -109,6 +111,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
   
   @IBAction func stepping(_ sender: UIStepper) {
     //there are some magic numbers, need to think of a way to increment/decrement upon increment/decrement of textfields
+    
+    //shows or hides the textfields
+    //also moves the yes/no and stepper and pick button
     switch sender.value {
     case 3:
       choice3.isHidden = false
@@ -164,6 +169,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
   
   
   func reset() {
+    //resets the app to default look
+    //ie. hiding options 3 to 10
+    //moves stepper, yes|no, and pick button
     add.value = 2
     choice3.isHidden = true
     choice4.isHidden = true
@@ -181,8 +189,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
   
   
   @IBAction func picking(_ sender: Any) {
+    /*the bread and butter
+    checks the textfields.
+     if the textfields are not empty, adds the option to choices array
+     randomly picks and returns a option from choices
+     brings screen to top
+    */
     var choices: [String] = []
-    
     let choicesArray: [UITextField] = [choice1, choice2, choice3, choice4, choice5, choice6, choice7, choice8, choice9, choice10]
     //unsure if this is good practice to declare this multiple times
     
@@ -194,6 +207,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
  
     let rand = choices.randomElement()
     
+    //sick animations
     if choices.count == 0 {
       UIView.transition(with: chosen,
            duration: 0.5,
@@ -210,11 +224,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
       }, completion: nil)
     }
     
-    scrollView.setContentOffset(CGPoint(x: scrollView.frame.origin.x, y: 0), animated: true) //yeets screen to top
+    //yeets screen to top
+    scrollView.setContentOffset(CGPoint(x: scrollView.frame.origin.x, y: 0), animated: true)
   }
   
 
   @IBAction func clearAll(_ sender: Any) {
+    //clear button.
+    //clears all the options and sets the app to "default look"
+    //see reset()
     choice1.text = ""
     choice2.text = ""
     reset()
@@ -222,6 +240,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
   }
 
   @IBAction func yesnoClick(_ sender: Any) {
+    /*yes|no button function
+     quick way to get a yes or no
+     considered heads|tails
+    */
     let yesOrNo = ["Yes", "No"]
     
     let yayNay = yesOrNo.randomElement()
@@ -229,7 +251,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     choice2.text = "No"
     reset()
     
-    
+    //sick animation again
     UIView.transition(with: chosen,
          duration: 0.5,
           options: .transitionFlipFromTop,
@@ -237,24 +259,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
            self?.chosen.text = yayNay
     }, completion: nil)
     
+    //the yeet
     scrollView.setContentOffset(CGPoint(x: scrollView.frame.origin.x, y: 0), animated: true)
   }
   
 }
 
 extension UITextField {
+  //uitextfield has a (x) button, this changes how it looks
   func modifyClearButton() {
       let clearButton = UIButton(type: .custom)
       clearButton.setImage(UIImage(named: "clear.png"), for: .normal)
-      clearButton.frame = CGRect(x: 0, y: 0, width: 16, height: 16
-    )
+      clearButton.frame = CGRect(x: 0, y: 0, width: 16, height: 16)
       clearButton.contentMode = .scaleAspectFit
       clearButton.addTarget(self, action: #selector(UITextField.clear(sender:) ), for: .touchUpInside)
       self.rightView = clearButton
       self.rightViewMode = .whileEditing
   }
-  
 
+  //what should happen when i hit the (x) button in the textfield
   @objc func clear(sender : AnyObject) {
       self.text = ""
   }
